@@ -13,14 +13,72 @@ log_level = 20
 client_id = "MQTT_to_RRD_TEST"
 hostname = test.mosquitto.org
 port= 1883
-#username="bob"
-#password="t0ps3cr3t!"
+#username=NN3-EU-XXXXXXXX
+#password=LONGHASHEDPASSWORD
 keepalive=60
-subscriptions=#
+# 475 is for pure cool link
+subscriptions=475/NN3-EU-XXXXXXXX/status/current,475/NN3-EU-XXXXXXXX/status/summary
 
 [/other/important/topic]
 friendly_name = "My Important Topic"
 step=30 
 archives=RRA:AVERAGE:0.5:1:120,RRA:AVERAGE:0.5:5:288
 
+# ENVIRONMENTAL-CURRENT-SENSOR-DATA data
+[tact]
+friendly_name = Temperature
+filter = "cel=tact,10,/,273,-"
+vlabel = Degres C
+# Celsius conversion x / 10.0 - 273 (3034 / 10.0 - 273 = 30 °C)
+# max 5000
 
+[hact]
+friendly_name = Humidity (%)
+vlabel = Pourcentage
+# max 100
+
+[pact]
+friendly_name = Dust level
+vlabel = ppm
+# max 9
+
+[sltm]
+friendly_name = Sleep Timer
+# max 9999
+
+[vact]
+friendly_name = Volatile organic compound Level
+# max 9
+
+
+# CURRENT-STATE product-state
+[fmod]
+friendly_name = Mode
+vlabel = FAN/AUTO
+
+[fnsp]
+friendly_name = Fan speed ( 0001 - 0010 )
+label = Vitesse
+vlabel = OFF/FAN
+
+[fnst]
+friendly_name = Fan State
+
+[oson]
+friendly_name = Swing ( ON , OFF )
+vlabel = ON/OFF
+
+[nmod]
+friendly_name = Night mode
+vlabel = ON/OFF
+
+[qtar]
+friendly_name = Air Quality Target
+
+[rhtm]
+friendly_name = Collect Data
+
+[filf]
+friendly_name = Filter Life
+vlabel = Days
+# max 4300
