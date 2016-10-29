@@ -5,17 +5,26 @@ just a proof of concept and scripts backup for playing with my Dyson Pure Cool L
 
 # init
 
-to setup the Dyson, you have first to connect on its own WiFI AP and send the SSID and passphrase of your local WiFI
-at this point, you can get the hash password when subscribing to the right topic
-after than you can ask the dyson do disable its AP and it will connect to your local WiFI
+to setup the Dyson, you have first to connect on its own Wi-Fi APi. The Fan will
+broadcast on Bonjour a service of type *_dyson_mqtt._tcp* listening on port
+1883 (and in my case on address 192.168.1.1). You have to init the fan by
+sending SSID and passphrase of your local Wi-Fi. after than you can ask the
+dyson do disable its AP and it will connect to your local Wi-Fi.
+From this point, the fan will try to connect to Dyson/Amazon server to send data.
 
 some trial in `Dyson-init.py`
 
+took some example from http://aakira.hatenablog.com/entry/2016/08/12/012654
+
+After this initialization, you'll have to use the hashed password to connect to
+the fan. The hashed password is a base64 encoded of the sha512 of the password
+written on manual and on the fan label
+
 # from MQTT to RRD
 
-Using a modified version of irvined1982/MQTT2RRD as this one expect one sensor value per topic.
-Here the Dyson send a json with several sensor or state packed altogether
-the script now use paho and python 3
+Using a modified version of irvined1982/MQTT2RRD as this one expect one sensor
+value per topic.  Here the Dyson send a json with several sensor or state
+packed altogether the script now use paho and python 3
 
 `mqtt2rrd.py` with `mqtt2rrd.conf.example`
 
