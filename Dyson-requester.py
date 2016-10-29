@@ -1,12 +1,40 @@
 import paho.mqtt.client as mqtt
-import time
-starttime=time.time()
+import time, configparser, os
+import hashlib, base64
 
+config = configparser.RawConfigParser()
+
+def get_config_item(section, name, default):
+    """
+    Gets an item from the config file, setting the default value if not found.
+    """
+    try:
+        value = config.get(section, name)
+    except:
+        value = default
+    return value
+
+def hash_password(password):
+    """
+    Hash password (in manual and used when connecting on init)
+    to a base64 encoded of its shad512 value
+    """
+    m = hashlib.sha512()
+    m.update(str(password).encode('utf-8'))
+    return base64.b64encode( m.digest() ).decode('utf-8')
+
+def on_connect(client, userdata, flags, respons_code):
+    print('status : ' + str(respons_code))
+
+config.read(['/etc/mqtt2rrd.conf', os.path.expanduser('./mqtt2rrd.conf')])
+
+
+HOST = get_config_item('mqtt','hostname','test.mosquitto.org')
+PORT = int(get_config_item('mqtt','port',1883))
+USERNAME = get_config_item('mqtt','username','NN3-EU-XXXXXXXX')
+PASSWORD = get_config_item('mqtt','password','PASSWORD')
+HASHEDPASSWORD = hash_password(PASSWORD)
 # TODO use config file
-HOST = 'test.mosquitto.org'
-PORT = 1883
-USERNAME = 'NN3-EU-XXXXXXXX'
-PASSWORD = 'LONGHASHEDPASSWORD'
 TOPIC = '475/' + USERNAME + '/command'
 
 # TODO write a separate script to change state with
@@ -15,18 +43,20 @@ TOPIC = '475/' + USERNAME + '/command'
 PAYLOAD_state = '{"msg":"REQUEST-CURRENT-STATE","time":"2016-08-11T14:57:17Z"}'
 PAYLOAD_sensor = '{"msg":"REQUEST-PRODUCT-ENVIRONMENT-CURRENT-SENSOR-DATA","time":"2016-08-11T14:57:17Z"}'
 # maybe not needed as it seems to be internal counter and data can be found with REQUEST-CURRENT-STATE
-PAYLOAD_usage = '{"msg":"REQUEST-PRODUCT-ENVIRONMENT-AND-USAGE-DATA","time":"2016-08-11T14:57:17Z"}'
+#PAYLOAD_usage = '{"msg":"REQUEST-PRODUCT-ENVIRONMENT-AND-USAGE-DATA","time":"2016-08-11T14:57:17Z"}'
 # I havent looked at faults meaning
 #PAYLOAD = '{"msg":"REQUEST-CURRENT-FAULTS","time":"2016-08-11T14:57:17Z"}'
 
-# TODO daemonize
+# TODO daemonize and handle the reconnection
 if __name__ == '__main__':
     client = mqtt.Client(protocol=mqtt.MQTTv311)
-    client.username_pw_set(USERNAME, PASSWORD)
+    client.username_pw_set(USERNAME, HASHEDPASSWORD)
+    client.on_connect = on_connect
     client.connect(HOST, port=PORT, keepalive=60)
     while True:
+        print (PORT)
         client.publish(TOPIC, PAYLOAD_state);
         client.publish(TOPIC, PAYLOAD_sensor);
-        client.publish(TOPIC, PAYLOAD_usage);
-        time.sleep(30.0 - ((time.time() - starttime) % 30.0))
+        #client.publish(TOPIC, PAYLOAD_usage);
+        time.sleep(30.0 - (time.time() % 30.0))
     client.disconnect()

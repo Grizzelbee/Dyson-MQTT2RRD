@@ -21,6 +21,7 @@ from signal import SIGTERM
 #import mosquitto, rrdtool
 import paho.mqtt.client as paho, rrdtool
 import pprint
+import hashlib, base64
 
 logger=logging.getLogger("MQTT2RRD")
 
@@ -36,6 +37,16 @@ def get_config_item(section, name, default):
     except:
         value = default
     return value
+
+
+def hash_password(password):
+    """
+    Hash password (in manual and used when connecting on init)
+    to a base64 encoded of its shad512 value
+    """
+    m = hashlib.sha512()
+    m.update(str(password).encode('utf-8'))
+    return base64.b64encode( m.digest() ).decode('utf-8')
 
 
 def extract_float(pl):
@@ -100,7 +111,7 @@ def run(args):
             if get_config_item("mqtt", "username", None):
                 client.username_pw_set(
                     get_config_item("mqtt", "username", ""),
-                    get_config_item("mqtt", "password", ""),
+                    hash_password(get_config_item("mqtt", "password", "")),
                 )
             logger.debug("Attempting to connect to server: %s:%s" % (get_config_item("mqtt", "hostname", "localhost"), get_config_item("mqtt", "port", 1833),))
             client.connect(

@@ -13,8 +13,8 @@ log_level = 20
 client_id = "MQTT_to_RRD_TEST"
 hostname = test.mosquitto.org
 port= 1883
-#username=NN3-EU-XXXXXXXX
-#password=LONGHASHEDPASSWORD
+username=NN3-EU-XXXXXXXX
+password=PASSWORDONMANUAL
 keepalive=60
 # 475 is for pure cool link
 subscriptions=475/NN3-EU-XXXXXXXX/status/current,475/NN3-EU-XXXXXXXX/status/summary
