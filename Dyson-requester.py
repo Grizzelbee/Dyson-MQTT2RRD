@@ -23,6 +23,7 @@ def hash_password(password):
     m.update(str(password).encode('utf-8'))
     return base64.b64encode( m.digest() ).decode('utf-8')
 
+# find why this doesnt works on publisher
 def on_connect(client, userdata, flags, respons_code):
     print('status : ' + str(respons_code))
 
@@ -41,7 +42,8 @@ TOPIC = '475/' + USERNAME + '/command'
 #PAYLOAD = '{"msg":"STATE-SET","time":"2016-08-11T14:57:17Z","data":{"oson":"OFF","fnsp":"0009","nmod":"OFF","fmod":"FAN"}}'
 
 PAYLOAD_state = '{"msg":"REQUEST-CURRENT-STATE","time":"2016-08-11T14:57:17Z"}'
-PAYLOAD_sensor = '{"msg":"REQUEST-PRODUCT-ENVIRONMENT-CURRENT-SENSOR-DATA","time":"2016-08-11T14:57:17Z"}'
+# not needed as sensor data are also returned when requesting current state
+#PAYLOAD_sensor = '{"msg":"REQUEST-PRODUCT-ENVIRONMENT-CURRENT-SENSOR-DATA","time":"2016-08-11T14:57:17Z"}'
 # maybe not needed as it seems to be internal counter and data can be found with REQUEST-CURRENT-STATE
 #PAYLOAD_usage = '{"msg":"REQUEST-PRODUCT-ENVIRONMENT-AND-USAGE-DATA","time":"2016-08-11T14:57:17Z"}'
 # I havent looked at faults meaning
@@ -54,9 +56,9 @@ if __name__ == '__main__':
     client.on_connect = on_connect
     client.connect(HOST, port=PORT, keepalive=60)
     while True:
-        print (PORT)
+        #TODO log
         client.publish(TOPIC, PAYLOAD_state);
-        client.publish(TOPIC, PAYLOAD_sensor);
+        #client.publish(TOPIC, PAYLOAD_sensor);
         #client.publish(TOPIC, PAYLOAD_usage);
         time.sleep(30.0 - (time.time() % 30.0))
     client.disconnect()
