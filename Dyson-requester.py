@@ -27,6 +27,14 @@ def hash_password(password):
 def on_connect(client, userdata, flags, respons_code):
     print('status : ' + str(respons_code))
 
+def on_disconnect(client, userdata, respons_code):
+    if respons_code != 0:
+        print("Unexpected disconnection.")
+    print('disconnecting : ' + str(respons_code))
+
+def on_publish(client, userdata, mid):
+    print('published : ' + str(mid))
+
 config.read(['/etc/mqtt2rrd.conf', os.path.expanduser('./mqtt2rrd.conf')])
 
 
@@ -54,7 +62,10 @@ if __name__ == '__main__':
     client = mqtt.Client(protocol=mqtt.MQTTv311)
     client.username_pw_set(USERNAME, HASHEDPASSWORD)
     client.on_connect = on_connect
+    client.on_disconnect = on_disconnect
+    client.on_publish = on_publish
     client.connect(HOST, port=PORT, keepalive=60)
+    client.loop_start()
     while True:
         #TODO log
         client.publish(TOPIC, PAYLOAD_state);
