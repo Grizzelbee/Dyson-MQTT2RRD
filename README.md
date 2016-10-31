@@ -43,3 +43,64 @@ http://haroon.sis.utoronto.ca/rrd/scripts/
 with the conf `rrd.cfg`
 
 some graphs can be removed as they are redundant
+
+# Data explanation
+
+## CURRENT-STATE
+
+### product-state
+
+| name | meaning |
+| ------------- | -----:|
+| ercd | ? ( NONE , or some hexa values ) |
+| filf | Filter life remaining (hour) |
+| fmod | Mode ( FAN , AUTO ) |
+| fnsp | Fan speed ( 0001 - 0010, AUTO ) |
+| fnst | Fan Status ( ON , OFF ) |
+| nmod | Night mode ( ON , OFF ) |
+| oson | Oscillation ( ON , OFF ) |
+| qtar | Air Quality target ( 0001 , 0003...) |
+| rhtm | Collect Data ? ( OFF...) |
+| wacd | ? ( NONE...) |
+
+### scheduler
+
+| name | meaning |
+| ------------- | -----:|
+| dstv | ? ( 0001... ) |
+| srsc | ? ( 7c68... ) |
+| tzid | timezone? ( 0001... ) |
+
+## ENVIRONMENTAL-CURRENT-SENSOR-DATA
+
+### data
+
+| name | meaning |
+| ------------- | -----:|
+| hact | Humidity ( % ) |
+| pact | Dust ( 0000 - 0009 ) |
+| sltm | Sleep Timer ( OFF... 9999 ) |
+| tact | Temperature in Kelvin ( 0000 - 5000 ) |
+| vact | volatil organic compounds ( 0001 - 0009 ) |
+
+## ENVIRONMENTAL-AND-USAGE-DATA
+
+Redundent values ?
+
+### data
+
+| name | meaning |
+| ------------- | -----:|
+| pal0 - pal9 | number of second spend in this level of dust since the begining of hour ( 0000 - 3600 ) |
+| palm | seems to be a median value of palX |
+| vol0 - vol9 | number of second spend in this level of voc since the begining of hour ( 0000 - 3600 ) |
+| volm | seems to be a median value of volX |
+| aql0 - aql9 | number of second spend in this level of air quality ( max (pal, vol)) since the begining of hour ( 0000 - 3600 ) |
+| aqlm | seems to be a median value of aqlX |
+| fafs | seems to be a number of seconds spend in a specific time |
+| faos | seems to be a number of seconds spend in a specific time |
+| fofs | seems to be a number of seconds spend in a specific time |
+| fons | seems to be a number of seconds spend in a specific time |
+| humm | humidity ? ( % )   |
+| tmpm | temperature in kelvin ? ( 0000 - 5000 ) |
+
