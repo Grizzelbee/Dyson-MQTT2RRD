@@ -1,6 +1,7 @@
 import paho.mqtt.client as mqtt
 import time, configparser, os
 import hashlib, base64
+from time import gmtime, strftime
 
 config = configparser.RawConfigParser()
 
@@ -68,6 +69,8 @@ if __name__ == '__main__':
     client.loop_start()
     while True:
         #TODO log
+        mytime = strftime("%Y-%m-%dT%H:%M:%SZ", gmtime())
+        PAYLOAD_state = '{"msg":"REQUEST-CURRENT-STATE","time":"' + mytime + '"}'
         client.publish(TOPIC, PAYLOAD_state);
         #client.publish(TOPIC, PAYLOAD_sensor);
         #client.publish(TOPIC, PAYLOAD_usage);
