@@ -2,6 +2,7 @@ import paho.mqtt.client as mqtt
 import time, configparser, os
 import hashlib, base64
 from time import gmtime, strftime
+import requests
 
 config = configparser.RawConfigParser()
 
@@ -32,6 +33,12 @@ def on_disconnect(client, userdata, respons_code):
     if respons_code != 0:
         print("Unexpected disconnection.")
     print('disconnecting : ' + str(respons_code))
+    # TODO put the url in conf
+    res = requests.get('https://example.com/sendmsg?msg=Dyson%20Disconnected')
+    if res.status_code == 200:
+        print('Alert sent')
+    else:
+        print('got error code:' + res.status_code)
 
 def on_publish(client, userdata, mid):
     print('published : ' + str(mid))
