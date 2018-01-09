@@ -131,7 +131,7 @@ def run(args):
 # MQTT Callback handlers
 #
 ####
-def on_connect(client, userdata, rc):
+def on_connect(client, userdata, flags, rc):
     logger.info("status" + str(rc))
     logger.info("Connected to server.")
     subs = get_config_item("mqtt", "subscriptions", "#")
